@@ -1,0 +1,9 @@
+target/
+.idea/
+.env*
+**/.env
+.vscode
+*-sa.json
+*.override.yaml
+.cargo
+
