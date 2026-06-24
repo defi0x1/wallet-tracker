@@ -1,11 +1,11 @@
 [package]
-name = "db"
+name = "common"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-common = { path = "../common" }
-sqlx = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
 chrono = { workspace = true }
 rust_decimal = { workspace = true }
-thiserror = { workspace = true }
+sqlx = { workspace = true }
