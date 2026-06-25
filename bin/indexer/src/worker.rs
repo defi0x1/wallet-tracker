@@ -1,10 +1,17 @@
 use sqlx::PgPool;
 use std::time::Duration;
+use tokio::sync::watch;
 
-pub async fn start(db: PgPool, rpc_url: String) {
+pub async fn start(db: PgPool, rpc_url: String, mut shutdown_rx: watch::Receiver<bool>) {
     let client = rpc::client::create_client(&rpc_url);
 
     loop {
+        // check shutdown before each cycle
+        if *shutdown_rx.borrow() {
+            tracing::info!("Worker shutting down");
+            break;
+        }
+
         let wallets = match db::wallets::get_all_wallets(&db).await {
             Ok(w) => w,
             Err(e) => {
@@ -20,7 +27,14 @@ pub async fn start(db: PgPool, rpc_url: String) {
             }
         }
 
-        tokio::time::sleep(Duration::from_secs(60)).await;
+        // wait 60s but wake up immediately if shutdown signal arrives
+        tokio::select! {
+            _ = tokio::time::sleep(Duration::from_secs(60)) => {}
+            _ = shutdown_rx.changed() => {
+                tracing::info!("Worker shutting down during sleep");
+                break;
+            }
+        }
     }
 }
 
