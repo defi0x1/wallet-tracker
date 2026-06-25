@@ -1,0 +1,17 @@
+[package]
+name = "rpc"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies]
+common = { path = "../common" }
+solana-client = { workspace = true }
+solana-sdk = { workspace = true }
+chrono = { workspace = true }
+rust_decimal = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+spl-token = { workspace = true }
+solana-transaction-status = { workspace = true }
+solana-account-decoder = { workspace = true }

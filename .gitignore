@@ -6,3 +6,4 @@ target/
 *-sa.json
 *.override.yaml
 .cargo
+.sqlx
